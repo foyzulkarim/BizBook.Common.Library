@@ -10,7 +10,6 @@ namespace BizBook.Common.Library.Models.Entities
         [Column(TypeName = "varchar(128)")]
         public string Id { get; set; }
 
-        [IsIndex]
         [Required]
         public DateTime Created { get; set; }
 
@@ -24,7 +23,6 @@ namespace BizBook.Common.Library.Models.Entities
         [Column(TypeName = "varchar(32)")]
         public string CreatedFrom { get; set; }
 
-        [IsIndex]
         [Required]
         public DateTime Modified { get; set; }
 
@@ -32,7 +30,6 @@ namespace BizBook.Common.Library.Models.Entities
         [Column(TypeName = "varchar(128)")]
         public string ModifiedBy { get; set; }
 
-        [IsIndex]
         [Required]
         public bool IsActive { get; set; }
 
@@ -41,7 +38,6 @@ namespace BizBook.Common.Library.Models.Entities
         [Column(TypeName = "varchar(128)")]
         public string ShopId { get; set; }
 
-        [IsIndex]
         public bool IsDeleted { get; set; }
     }
 }

@@ -1,7 +1,12 @@
 ﻿using System;
+using System.Collections.Immutable;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace BizBook.Common.Library.Models
 {
@@ -10,7 +15,6 @@ namespace BizBook.Common.Library.Models
     {
 
     }
-
 
     public static class DbContextExtension
     {
@@ -38,7 +42,7 @@ namespace BizBook.Common.Library.Models
         //    }
         //}
 
-        public static void BuildIndex<T>(this ModelBuilder builder) where T : class
+        public static ModelBuilder BuildIndex<T>(this ModelBuilder builder) where T : class
         {
             var propertyInfos = typeof(T).GetProperties().ToList().Where(x => x.GetCustomAttributes(typeof(IsIndex), false).Length > 0);
             foreach (var propertyInfo in propertyInfos)
@@ -50,6 +54,8 @@ namespace BizBook.Common.Library.Models
                 string indexName = $"IX_{propertyInfo.Name}";
                 builder.Entity<T>().HasIndex(lambda).HasName(indexName);
             }
+
+            return builder;
         }
     }
 }
