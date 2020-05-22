@@ -53,12 +53,12 @@ namespace BizBook.Common.Library.Services
             return vms.ToList();
         }
 
-        public virtual async Task<List<DropdownViewModel<T>>> GetDropdownListAsync(TR request)
+        public virtual async Task<List<DropdownViewModel<TV>>> GetDropdownListAsync(TR request)
         {
             var queryable = Db.Set<T>().AsNoTracking();
             queryable = request.GetOrderedData(queryable);
-            var list = await queryable.Select(request.Dropdown()).ToListAsync();
-            return new List<DropdownViewModel<T>>(list);
+            var list = await queryable.Select(request.Dropdown<TV>()).ToListAsync();
+            return new List<DropdownViewModel<TV>>(list);
         }
 
         public virtual async Task<Tuple<List<TV>, int>> SearchAsync(TR request)

@@ -108,7 +108,7 @@ namespace BizBook.Common.Library.Models.RequestModels
             return queryable;
         }
 
-        public abstract Expression<Func<TModel, DropdownViewModel<TModel>>> Dropdown();
+        public abstract Expression<Func<TModel, DropdownViewModel<TV>>> Dropdown<TV>() where TV : IViewModel;
 
         public IQueryable<TModel> GetOrderedData(IQueryable<TModel> queryable)
         {

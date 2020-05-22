@@ -5,3 +5,6 @@
 /.vs/BizBook.Common/v16
 /BizBook.Common.Library/bin/
 /BizBook.Common.Library/obj
+/.vs/BizBook.Common/DesignTimeBuild
+*.nupkg
+/BizBook.Common.Library/nuget.config

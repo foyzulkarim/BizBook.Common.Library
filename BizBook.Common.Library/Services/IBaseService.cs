@@ -15,7 +15,7 @@ namespace BizBook.Common.Library.Services
         Task<T> GetAsync(string id);
         Task<TV> GetDetailAsync(string id);
         Task<List<TV>> GetAllAsync();
-        Task<List<DropdownViewModel<T>>> GetDropdownListAsync(TR request);
+        Task<List<DropdownViewModel<TV>>> GetDropdownListAsync(TR request);
         Task<Tuple<List<TV>, int>> SearchAsync(TR request);
         Task<Tuple<List<TV2>, int>> SearchAsync<TV2>(TR request) where TV2 : BaseViewModel<T>;
     }
