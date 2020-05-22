@@ -1,0 +1,7 @@
+﻿################################################################################
+# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
+################################################################################
+
+/.vs/BizBook.Common/v16
+/BizBook.Common.Library/bin/Debug
+/BizBook.Common.Library/obj
