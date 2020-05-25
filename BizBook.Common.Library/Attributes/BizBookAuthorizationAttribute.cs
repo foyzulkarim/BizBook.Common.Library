@@ -1,6 +1,7 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using System.Security.Claims;
+using BizBook.Common.Library.ApiExtensions;
+using BizBook.Common.Library.Constants;
 using BizBook.Common.Library.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -28,7 +29,9 @@ namespace BizBook.Common.Library.Attributes
                     UserName = userName
                 };
 
-                context.HttpContext.Items["AppUser"] = appUser;
+                context.HttpContext.Items[HeaderNames.AppUser] = appUser;
+                context.HttpContext.Items[HeaderNames.CorrelationId] = context.HttpContext.Request.GetHeaderValue(HeaderNames.CorrelationId);
+                context.HttpContext.Items[HeaderNames.SessionId] = context.HttpContext.Request.GetHeaderValue(HeaderNames.SessionId);
             }
             else
             {

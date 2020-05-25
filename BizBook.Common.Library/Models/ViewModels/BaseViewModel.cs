@@ -19,4 +19,13 @@ namespace BizBook.Common.Library.Models.ViewModels
 
         public bool IsActive { get; set; }
     }
+
+    public abstract class BaseBasicViewModel<T> : IBasicViewModel<T> where T : Entity
+    {
+        public string Id { get; set; }
+
+        public DateTime Created { get; set; }
+
+        public DateTime Modified { get; set; }
+    }
 }

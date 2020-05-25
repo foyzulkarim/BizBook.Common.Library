@@ -1,6 +1,8 @@
-﻿namespace BizBook.Common.Library.Models.ViewModels
+﻿using BizBook.Common.Library.Models.Entities;
+
+namespace BizBook.Common.Library.Models.ViewModels
 {
-    public class DropdownViewModel<TV> where TV : IViewModel
+    public class DropdownViewModel<T,TV> where T: Entity where TV : BaseBasicViewModel<T>
     {
         public string Id { get; set; }
         public string Text { get; set; }

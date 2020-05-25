@@ -1,13 +1,12 @@
 ﻿using System;
 using System.Linq;
 using System.Reflection;
-using BizBook.Common.Library.Models.Entities;
 
 namespace BizBook.Common.Library.Models.ViewModels
 {
-    public static class ExtensionMethods
+    public static class ViewModelExtensions
     {
-        public static TV ToViewModel<T, TV>(this T entity) where TV : IViewModel
+        public static TV ToViewModel<T, TV>(this T entity) where TV : class
         {
             var viewModel = Activator.CreateInstance<TV>();
             var viewModelType = viewModel.GetType();

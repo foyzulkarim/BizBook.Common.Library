@@ -9,7 +9,8 @@ using Microsoft.EntityFrameworkCore;
 
 namespace BizBook.Common.Library.Services
 {
-    public abstract class BaseService<T, TR, TV> : IBaseService<T, TR, TV> where T : Entity where TR : RequestModel<T> where TV : BaseViewModel<T>
+    public abstract class BaseService<T, TR, TV, TV2> : IBaseService<T, TR, TV, TV2> where T : Entity where TR : RequestModel<T> where TV : BaseViewModel<T> 
+        where TV2: BaseBasicViewModel<T>
     {
         protected DbContext Db;
 
@@ -40,7 +41,7 @@ namespace BizBook.Common.Library.Services
             return saveChanges > 0;
         }
 
-        public virtual async Task<T> GetAsync(string id)
+        public virtual async Task<T> GetEntityAsync(string id)
         {
             T entity = await Db.Set<T>().FindAsync(id);
             return entity;
@@ -53,48 +54,52 @@ namespace BizBook.Common.Library.Services
             return vms.ToList();
         }
 
-        public virtual async Task<List<DropdownViewModel<TV>>> GetDropdownListAsync(TR request)
+        public async Task<List<DropdownViewModel<T, TV2>>> GetDropdownListAsync(TR request) 
         {
             var queryable = Db.Set<T>().AsNoTracking();
             queryable = request.GetOrderedData(queryable);
-            var list = await queryable.Select(request.Dropdown<TV>()).ToListAsync();
-            return new List<DropdownViewModel<TV>>(list);
+            var list = await queryable.Select(request.Dropdown<TV2>()).ToListAsync();
+            return new List<DropdownViewModel<T, TV2>>(list);
         }
 
         public virtual async Task<Tuple<List<TV>, int>> SearchAsync(TR request)
         {
-            var queryable = request.GetOrderedData(Db.Set<T>().AsNoTracking());
-            int count = queryable.Count();
-            queryable = request.SkipAndTake(queryable);
-            if (request.IsIncludeParents)
-            {
-                queryable = request.IncludeParents(queryable);
-            }
-
-            var list = await queryable.ToListAsync();
-            var vms = list.ConvertAll(x => x.ToViewModel<T,TV>() as TV).ToList();
+            var (list, count) = await GetEntityListAsync(request);
+            var vms = list.ConvertAll(x => x.ToViewModel<T, TV>()).ToList();
             return new Tuple<List<TV>, int>(vms, count);
         }
 
-        public virtual async Task<Tuple<List<TV2>, int>> SearchAsync<TV2>(TR request) where TV2 : BaseViewModel<T>
+        public virtual async Task<Tuple<List<TV3>, int>> SearchAsync<TV3>(TR request) where TV3 : BaseViewModel<T>
         {
-            var queryable = request.GetOrderedData(Db.Set<T>().AsNoTracking());
-            int count = queryable.Count();
-            queryable = request.SkipAndTake(queryable);
-            if (request.IsIncludeParents)
-            {
-                queryable = request.IncludeParents(queryable);
-            }
+            var (list, count) = await GetEntityListAsync(request);
+            var vms = list.ConvertAll(x => x.ToViewModel<T, TV3>() as TV3).ToList();
+            return new Tuple<List<TV3>, int>(vms, count);
+        }
 
-            var list = await queryable.ToListAsync();
-            var vms = list.ConvertAll(x => x.ToViewModel<T,TV2>() as TV2).ToList();
+        public async Task<Tuple<List<TV2>, int>> BasicSearchAsync(TR request) 
+        {
+            var (list, count) = await GetEntityListAsync(request);
+            var vms = list.ConvertAll(x => x.ToViewModel<T, TV2>()).ToList();
             return new Tuple<List<TV2>, int>(vms, count);
         }
 
-        public virtual async Task<TV> GetDetailAsync(string id)
+        public virtual async Task<TV> GetAsync(string id)
         {
-            var entity = await GetAsync(id);
-            var viewModel = entity.ToViewModel<T,TV>() as TV;
+            var entity = await GetEntityAsync(id);
+            var viewModel = entity.ToViewModel<T, TV>() as TV;
+            return viewModel;
+        }
+
+        public async Task<T> GetFirstEntityAsync(TR request)
+        {
+            T entity = await request.GetFirstData(Db.Set<T>().AsNoTracking());
+            return entity;
+        }
+
+        public async Task<TV> GetFirstAsync(TR request)
+        {
+            var entity = await GetFirstEntityAsync(request);
+            var viewModel = entity.ToViewModel<T, TV>() as TV;
             return viewModel;
         }
 
@@ -110,6 +115,19 @@ namespace BizBook.Common.Library.Services
             return toEntity;
         }
 
+        private async Task<Tuple<List<T>, int>> GetEntityListAsync(TR request)
+        {
+            var queryable = request.GetOrderedData(Db.Set<T>().AsNoTracking());
+            int count = queryable.Count();
+            queryable = request.SkipAndTake(queryable);
+            if (request.IsIncludeParents)
+            {
+                queryable = request.IncludeParents(queryable);
+            }
+
+            var list = await queryable.ToListAsync();
+            return new Tuple<List<T>, int>(list, count);
+        }
 
         private static TV CreateVmInstance(T x)
         {
