@@ -10,6 +10,7 @@ namespace BizBook.Common.Library.Models.Entities
         [Column(TypeName = "varchar(128)")]
         public string Id { get; set; }
 
+        [IsIndex]
         [Required]
         public DateTime Created { get; set; }
 
@@ -23,6 +24,7 @@ namespace BizBook.Common.Library.Models.Entities
         [Column(TypeName = "varchar(32)")]
         public string CreatedFrom { get; set; }
 
+        [IsIndex]
         [Required]
         public DateTime Modified { get; set; }
 
