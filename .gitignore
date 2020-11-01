@@ -8,3 +8,5 @@
 /.vs/BizBook.Common/DesignTimeBuild
 *.nupkg
 /BizBook.Common.Library/nuget.config
+/BizBook.Common.Library.EntityFrameworkCore/bin/Release/netcoreapp3.1
+/BizBook.Common.Library.EntityFrameworkCore/obj
